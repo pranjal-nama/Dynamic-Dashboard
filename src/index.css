@@ -11,3 +11,67 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  display: flex;
+}
+
+.sidenav {
+  display: flex;
+  background-color: black;
+  color: white;
+  width: 300px;
+  top: 0;
+  left: 0;
+}
+
+.nav {
+  height: 100vh;
+}
+
+.navbar-link {
+  display: flex;
+  padding: 19px 0;
+  text-decoration: none;
+}
+
+.header input {
+  display: flex;
+  margin-top: 34px;
+  margin-left: 50px;
+  width: 500px;
+  height: 22px;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  margin: 20px;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.graphs {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.pie {
+  margin: 50px;
+  border: .1px solid LightGray;
+}
+
+.doughnut {
+  margin: 50px;
+  border: .1px solid lightgray;
+}
+
+.line {
+  margin: 50px;
+  border: .1px solid lightgray;
+}
