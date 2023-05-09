@@ -1,0 +1,32 @@
+.navbar-container {
+    background-color: black;
+    color: white;
+    font-weight: 500;
+    min-width: 300px;
+    height: 100vh;
+    padding: 1rem;
+  }
+  
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    padding: 0;
+  }
+  
+  .navbar-link {
+    list-style: none;
+    padding: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .navbar-link:hover {
+    background-color: rgb(37, 37, 37);
+  }
+  
+  .navbar-link:first-of-type {
+    background-color: white;
+    color: black;
+    font-weight: 600;
+  }

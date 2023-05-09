@@ -1,5 +1,5 @@
 import { Pie, Line } from 'react-chartjs-2';
-import '../App.css';
+import './styles.css';
 import { useEffect, useState } from 'react';
 import { CategoryScale, PointElement, Chart, Tooltip, Title, ArcElement, Legend, LinearScale, LineElement } from 'chart.js';
 
@@ -28,47 +28,75 @@ const linedata = {
 
 
 export default function Dashboard() {
-    const [data, setData] = useState([]);
+    const [pieData, setPieData] = useState([]);
+    const [lineData, setLineData] = useState([]);
     const columnNames = ["region", "intensity", "topic", "relevance"];
-    console.log("data", data);
+
     useEffect(() => {
         fetch('http://localhost:8080/api/data/columns')
-            .then(data => data.json())
-            .then((res) => setData(res))
+            .then(res => res.json())
+            .then(res => {
+                const pData = [];
+                const lData = [];
+
+                res.data.forEach(row => {
+                    pData.push(row.slice(0,2))
+                    lData.push(row.slice(2))
+                })
+
+                setPieData(pData)
+                setLineData(lData)
+            })
             .catch(e => {
                 console.log("error", e);
             })
     }, [])
 
-    //if we have data then load else show loading. 
-    if (data === []) {
-        return <h2>Loading</h2>
-    }
-
-    const chartData = {
-        labels: data.map(entry => entry.region),
+    const pieChartData = {
+        labels: pieData.map(entry => entry[0]),
         datasets: [
             {
-                data: data.map(entry => entry.intensity),
+                data: pieData.map(entry => entry[1]),
                 backgroundColor: [
                     '#FF6384',
                     '#36A2EB',
                     '#FFCE56',
+                    '#5cc378'
+                ],
+            },
+        ],
+    };
+
+    const lineChartData = {
+        labels: lineData.map(entry => entry[0]),
+        datasets: [
+            {
+                data: lineData.map(entry => entry[1]),
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#5cc378'
                 ],
             },
         ],
     };
 
     return (
-        <div>
+        <div className='dashboard'>
             <div className='header' >
                 <input placeholder='Search'></input>
                 <div className="user-icon">
+                    😄
                 </div>
             </div>
             <div className='graphs'>
-                <div className='pie'><Pie data={chartData} /></div>
-                <div className='line'><Line data={linedata} /></div>
+                { pieData !== [] &&
+                    <div className='pie'><Pie data={pieChartData} /></div>
+                }
+                { lineData !== [] &&
+                    <div className='line'><Line data={lineChartData} /></div>
+                }
             </div>
             <footer></footer>
         </div>

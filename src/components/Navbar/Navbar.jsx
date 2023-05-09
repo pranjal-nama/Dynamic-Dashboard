@@ -1,13 +1,13 @@
-import '../App.css';
+import './styles.css';
 
 const options = ["Dashboard", "Email", "User", "Roles & Permissions", "Pages", "Raise Support", "Access Control", "Documentation", "Settings"];
 export default function Navbar() {
     return (
-        <div className='sidenav'>
-            <ul>
+        <div className='navbar-container'>
+            <ul className='navbar'>
                 {options.map((item, index) => {
                     return (
-                        <Tile key={index} text={item} className="navbar-link" />
+                        <Tile key={index} text={item} />
                     );
                 })}
             </ul>
@@ -15,9 +15,9 @@ export default function Navbar() {
     )
 };
 
-function Tile({ text, className }) {
+function Tile({ text }) {
     return (
-        <li className={className}>{text}</li>
+        <li className="navbar-link">{text}</li>
     )
 }
 
