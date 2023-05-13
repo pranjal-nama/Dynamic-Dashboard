@@ -7,50 +7,56 @@ Chart.register(
     CategoryScale, LinearScale, Tooltip, Title, ArcElement, Legend, PointElement, LineElement
 );
 
-const linedata = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-        {
-            label: "First dataset",
-            data: [33, 53, 85, 41, 44, 65],
-            fill: true,
-            backgroundColor: "rgba(75,192,192,0.2)",
-            borderColor: "rgba(75,192,192,1)"
-        },
-        {
-            label: "Second dataset",
-            data: [33, 25, 35, 51, 54, 76],
-            fill: false,
-            borderColor: "#742774"
-        }
-    ]
-};
-
-
 export default function Dashboard() {
     const [pieData, setPieData] = useState([]);
     const [lineData, setLineData] = useState([]);
-    const columnNames = ["region", "intensity", "topic", "relevance"];
 
     useEffect(() => {
         fetch('http://localhost:8080/api/data/columns')
             .then(res => res.json())
             .then(res => {
-                const pData = [];
-                const lData = [];
+                const dataMap = new Map();
 
-                res.data.forEach(row => {
-                    pData.push(row.slice(0,2))
-                    lData.push(row.slice(2))
-                })
+                res.forEach(row => {
+                    const key = row[0];
+                    const value = row[1];
 
-                setPieData(pData)
+                    if (key !== "") {
+                        if (dataMap.has(key)) {
+                            dataMap.set(key, dataMap.get(key) + value);
+                        } else {
+                            dataMap.set(key, value);
+                        }
+                    }
+                });
+
+                const pData = Array.from(dataMap.entries());
+                setPieData(pData);
+
+                const lmap = new Map();
+
+                res.forEach(row => {
+                    const lkey = row[2];
+                    const lvalue = row[3];
+
+                    if (lkey !== "") {
+                        if (lmap.has(lkey)) {
+                            lmap.set(lkey, lmap.get(lkey) + lvalue);
+                        } else {
+                            lmap.set(lkey, lvalue);
+                        }
+                    }
+
+                });
+
+
+                const lData = Array.from(lmap.entries());
                 setLineData(lData)
             })
             .catch(e => {
                 console.log("error", e);
             })
-    }, [])
+    }, []);
 
     const pieChartData = {
         labels: pieData.map(entry => entry[0]),
@@ -63,8 +69,33 @@ export default function Dashboard() {
                     '#FFCE56',
                     '#5cc378'
                 ],
+                label: "Relevance",
             },
         ],
+    };
+
+    const pieChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Intensity in different regions',
+                align: 'center',
+                font: {
+                    size: 16,
+                    weight: 'bold',
+                },
+            },
+            legend: {
+                position: 'right',
+            },
+        },
+        layout: {
+            padding: {
+                bottom: 10,
+            },
+        },
     };
 
     const lineChartData = {
@@ -73,14 +104,37 @@ export default function Dashboard() {
             {
                 data: lineData.map(entry => entry[1]),
                 backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#5cc378'
+                    '#FF6384'
                 ],
+                label: "Relevance",
             },
         ],
     };
+
+    const lineChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Relevance of Different Topics',
+                align: 'center',
+                font: {
+                    size: 16,
+                    weight: 'bold',
+                },
+            },
+            legend: {
+                position: 'bottom',
+            },
+        },
+        layout: {
+            padding: {
+                bottom: 10,
+            },
+        },
+    };
+
 
     return (
         <div className='dashboard'>
@@ -91,11 +145,11 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className='graphs'>
-                { pieData !== [] &&
-                    <div className='pie'><Pie data={pieChartData} /></div>
+                {pieData.length !== [] &&
+                    <div className='pie'><Pie data={pieChartData} options={pieChartOptions} /></div>
                 }
-                { lineData !== [] &&
-                    <div className='line'><Line data={lineChartData} /></div>
+                {lineData.length !== [] &&
+                    <div className='line'><Line data={lineChartData} options={lineChartOptions} /></div>
                 }
             </div>
             <footer></footer>
