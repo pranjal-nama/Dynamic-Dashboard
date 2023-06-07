@@ -16,6 +16,7 @@ export default function Dashboard() {
             .then(res => res.json())
             .then(res => {
                 const dataMap = new Map();
+                const lmap = new Map();
 
                 res.forEach(row => {
                     const key = row[0];
@@ -28,14 +29,7 @@ export default function Dashboard() {
                             dataMap.set(key, value);
                         }
                     }
-                });
 
-                const pData = Array.from(dataMap.entries());
-                setPieData(pData);
-
-                const lmap = new Map();
-
-                res.forEach(row => {
                     const lkey = row[2];
                     const lvalue = row[3];
 
@@ -46,9 +40,10 @@ export default function Dashboard() {
                             lmap.set(lkey, lvalue);
                         }
                     }
-
                 });
 
+                const pData = Array.from(dataMap.entries());
+                setPieData(pData);
 
                 const lData = Array.from(lmap.entries());
                 setLineData(lData)

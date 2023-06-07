@@ -22,11 +22,3 @@ function Tile({ text }) {
 }
 
 
-// export default Navbar;
-
-/*
-2 types of export in JS:
-1. Named Exports (an object containing component(s) is exported)
-2. Default Exports (a component is exported)
-
-*/
